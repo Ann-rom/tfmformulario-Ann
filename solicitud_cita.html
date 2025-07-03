@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitud de cita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            width: 300px;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 30px;
+            padding: 12px 20px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005ea6;
+        }
+        #resultado {
+            margin-top: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <h1>Solicitud de cita</h1>
+
+    <form id="agentForm">
+        <label for="tipo_servicio">Tipo de servicio:</label>
+        <select id="tipo_servicio">
+            <option value="Adquisicion de propiedad">Adquisición de propiedad</option>
+            <option value="Alquiler de inmueble">Alquiler de inmueble</option>
+            <option value="Venta de inmueble">Venta de inmueble</option>
+            <option value="Traspaso">Traspaso</option>
+            <option value="Asesoria">Asesoría</option>
+        </select>
+
+        <label for="zona">Zona:</label>
+        <select id="zona">
+            <option value="Santo Domingo">Santo Domingo</option>
+            <option value="La Romana">La Romana</option>
+            <option value="Santiago">Santiago</option>
+        </select>
+
+        <label for="modalidad">Modalidad:</label>
+        <select id="modalidad">
+            <option value="Presencial">Presencial</option>
+            <option value="Virtual">Virtual</option>
+        </select>
+
+        <label for="idioma">Idioma:</label>
+        <select id="idioma">
+            <option value="Español">Español</option>
+            <option value="Inglés">Inglés</option>
+        </select>
+
+        <label for="precio">Precio estimado (RD$):</label>
+        <input type="number" id="precio" />
+
+        <button type="submit">Enviar solicitud</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById("agentForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            document.getElementById("resultado").textContent = "Procesando solicitud...";
+
+            // Aquí se enviaría la solicitud al endpoint si estuviera configurado
+            setTimeout(function() {
+                document.getElementById("resultado").textContent = "¡Gracias! Su solicitud ha sido enviada correctamente.";
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
