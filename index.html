@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solicitud de Cita</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    select, input[type="number"], button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    #respuesta {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <h1>Solicitud de Cita</h1>
+  <form id="formulario">
+    <label for="tipo_servicio">Tipo de servicio:</label>
+    <select id="tipo_servicio" name="tipo_servicio">
+      <option value="Adquisicion de propiedad">Adquisición de propiedad</option>
+      <option value="Venta de propiedad">Venta de propiedad</option>
+      <option value="Renta de propiedad">Renta de propiedad</option>
+    </select>
+
+    <label for="zona">Zona:</label>
+    <select id="zona" name="zona">
+      <option value="Santo Domingo">Santo Domingo</option>
+      <option value="Punta Cana">Punta Cana</option>
+      <option value="La Romana">La Romana</option>
+      <option value="Santiago">Santiago</option>
+      <option value="Puerto Plata">Puerto Plata</option>
+    </select>
+
+    <label for="modalidad">Modalidad:</label>
+    <select id="modalidad" name="modalidad">
+      <option value="Presencial">Presencial</option>
+      <option value="Virtual">Virtual</option>
+    </select>
+
+    <label for="idioma">Idioma:</label>
+    <select id="idioma" name="idioma">
+      <option value="Español">Español</option>
+      <option value="Inglés">Inglés</option>
+      <option value="Francés">Francés</option>
+    </select>
+
+    <label for="precio_estimado">Precio estimado (RD$):</label>
+    <input type="number" id="precio_estimado" name="precio_estimado" required />
+
+    <button type="submit">Enviar solicitud</button>
+  </form>
+
+  <div id="respuesta"></div>
+
+  <script>
+    document.getElementById("formulario").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const datos = {
+        tipo_servicio: document.getElementById("tipo_servicio").value,
+        zona: document.getElementById("zona").value,
+        modalidad: document.getElementById("modalidad").value,
+        idioma: document.getElementById("idioma").value,
+        precio_estimado: parseFloat(document.getElementById("precio_estimado").value)
+      };
+
+      const respuestaDiv = document.getElementById("respuesta");
+
+      try {
+        const respuesta = await fetch("https://prod-21.westeurope.logic.azure.com:443/workflows/c8193308226046d8a3fca529fa1f68e2/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=P-uRq5x8joXIebE5h5ZyZqhMLSN4VPqay5atvfiEKfI", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(datos)
+        });
+
+        if (respuesta.ok) {
+          const resultado = await respuesta.json();
+          respuestaDiv.innerText = "✅ Solicitud enviada con éxito.";
+        } else {
+          respuestaDiv.innerText = "❌ Error al enviar la solicitud.";
+        }
+      } catch (error) {
+        respuestaDiv.innerText = "❌ Error de conexión.";
+      }
+    });
+  </script>
+</body>
+</html>
