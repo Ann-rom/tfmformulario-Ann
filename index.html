@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Solicitud de cita</title>
+</head>
+<body>
+  <h1>Solicitud de cita</h1>
+  <form id="citaForm">
+    <label>Tipo de servicio:</label><br />
+    <select name="tipo_servicio">
+      <option value="Adquisicion de propiedad">Adquisición de propiedad</option>
+      <option value="Adquisicion de proyecto">Adquisición de proyecto</option>
+      <option value="Alquiler de propiedad">Alquiler de propiedad</option>
+      <option value="Asesoria de inversion">Asesoría de inversión</option>
+      <option value="Tasacion de propiedad">Tasación de propiedad</option>
+    </select><br /><br />
+
+    <label>Zona de interés:</label><br />
+    <input type="text" name="zona_propiedad" /><br /><br />
+
+    <label>Modalidad preferida:</label><br />
+    <select name="modalidad_cliente">
+      <option value="Presencial">Presencial</option>
+      <option value="Virtual">Virtual</option>
+    </select><br /><br />
+
+    <label>Idioma:</label><br />
+    <select name="idioma_cliente">
+      <option value="Español">Español</option>
+      <option value="Inglés">Inglés</option>
+    </select><br /><br />
+
+    <label>Precio estimado (RD$):</label><br />
+    <input type="number" name="precio_estimado" /><br /><br />
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="resultado"></p>
+
+  <script>
+    document.getElementById("citaForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const datos = {
+        tipo_servicio: form.tipo_servicio.value,
+        zona_propiedad: form.zona_propiedad.value,
+        modalidad_cliente: form.modalidad_cliente.value,
+        idioma_cliente: form.idioma_cliente.value,
+        idioma_agente: "Español",
+        idioma_match: form.idioma_cliente.value === "Español",
+        dias_laborales: 5,
+        horas_laborales_dia: 8,
+        horas_disponibles_total: 40,
+        modalidad_agente: "Presencial",
+        tipo_jornada: "Completa",
+        modalidad_match: form.modalidad_cliente.value === "Presencial",
+        tickets_activos_agente: 2,
+        segmento_precio: "Medio",
+        año: new Date().getFullYear(),
+        mes: new Date().getMonth() + 1,
+        dia_semana: new Date().getDay(),
+        codigo_agente: ""
+      };
+
+      fetch("https://prod-21.westeurope.logic.azure.com:443/workflows/c8193308226046d8a3fca529fa1f68e2/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=P-uRq5x8joXIebE5h5ZyZqhMLSN4VPqay5atvfiEKfI", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        document.getElementById("resultado").innerText = "Solicitud enviada correctamente.";
+      })
+      .catch(error => {
+        document.getElementById("resultado").innerText = "Error al enviar la solicitud.";
+      });
+    });
+  </script>
+</body>
+</html>
